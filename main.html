@@ -1,16 +1,149 @@
 <!DOCTYPE html>
-
-<html>
-
+<html lang="en">
 <head>
-	<link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress Bar</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .progress-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            width: 350px;
+            margin-bottom: 20px;
+        }
+
+        .progress-container::before {
+            content: "";
+            background-color: #ccc;
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            transform: translateY(-50%);
+            z-index: -1;
+        }
+
+        .progress {
+            background-color: #007bff;
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 0%;
+            height: 5px;
+            transform: translateY(-50%);
+            transition: width 0.3s ease-in-out;
+        }
+
+        .circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #fff;
+            border: 3px solid #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .circle.active {
+            border-color: #007bff;
+            background-color: #007bff;
+            color: white;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
 </head>
-
 <body>
-	<!-- the entire body must be written by student -->
-    <script type="text/javascript" src="./script.js">
-</script>
+    <div class="container">
+        <div class="progress-container">
+            <div class="progress" id="progress"></div>
+            <div class="circle active" id="circle-1">1</div>
+            <div class="circle" id="circle-2">2</div>
+            <div class="circle" id="circle-3">3</div>
+            <div class="circle" id="circle-4">4</div>
+            <div class="circle" id="circle-5">5</div>
+        </div>
+        <button id="prev" disabled>Previous</button>
+        <button id="next">Next</button>
+    </div>
 
+    <script>
+        const prevBtn = document.getElementById("prev");
+        const nextBtn = document.getElementById("next");
+        const progress = document.getElementById("progress");
+        const circles = document.querySelectorAll(".circle");
+
+        let currentStep = 1;
+
+        function updateProgress() {
+            circles.forEach((circle, index) => {
+                if (index < currentStep) {
+                    circle.classList.add("active");
+                } else {
+                    circle.classList.remove("active");
+                }
+            });
+
+            const activeCircles = document.querySelectorAll(".active");
+            progress.style.width = ((activeCircles.length - 1) / (circles.length - 1)) * 100 + "%";
+
+            prevBtn.disabled = currentStep === 1;
+            nextBtn.disabled = currentStep === circles.length;
+        }
+
+        nextBtn.addEventListener("click", () => {
+            if (currentStep < circles.length) {
+                currentStep++;
+                updateProgress();
+            }
+        });
+
+        prevBtn.addEventListener("click", () => {
+            if (currentStep > 1) {
+                currentStep--;
+                updateProgress();
+            }
+        });
+    </script>
 </body>
-
 </html>
